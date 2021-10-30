@@ -1,6 +1,7 @@
-const { create, getByAuthor } = require('./task/task');
+const { create, getByAuthor, getAll } = require('./task/task');
 
 module.exports = {
   create,
   getByAuthor,
+  getAll,
 };

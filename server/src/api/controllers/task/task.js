@@ -12,7 +12,13 @@ const getByAuthor = rescue(async (req, res) => {
   return res.status(200).json(task);
 });
 
+const getAll = rescue(async (req, res) => {
+  const tasks = await taskService.getAll();
+  return res.status(200).json(tasks);
+});
+
 module.exports = {
   create,
   getByAuthor,
+  getAll,
 };

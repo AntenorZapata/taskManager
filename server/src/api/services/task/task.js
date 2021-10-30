@@ -12,7 +12,13 @@ const getByAuthor = async (author) => {
   return task;
 };
 
+const getAll = async () => {
+  const tasks = await taskModel.getAll();
+  return tasks;
+};
+
 module.exports = {
   create,
   getByAuthor,
+  getAll,
 };
