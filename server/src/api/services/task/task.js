@@ -7,6 +7,12 @@ const create = async (body) => {
   return task;
 };
 
+const getByAuthor = async (author) => {
+  const task = await taskModel.getByAuthor(author);
+  return task;
+};
+
 module.exports = {
   create,
+  getByAuthor,
 };

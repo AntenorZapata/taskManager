@@ -13,6 +13,14 @@ const create = async ({ task, author, category }) => {
   return { status: 'success', id: insertedId };
 };
 
+const getByAuthor = async (author) => {
+  const task = await connection().then((db) => db
+    .collection('tasks').findOne({ author }));
+
+  return task;
+};
+
 module.exports = {
   create,
+  getByAuthor,
 };
