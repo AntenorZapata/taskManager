@@ -1,8 +1,10 @@
 const { validateTask } = require('../validations/taskValidations');
+const taskModel = require('../../models');
 
 const create = async (body) => {
   await validateTask(body);
-  // return task;
+  const task = await taskModel.create(body);
+  return task;
 };
 
 module.exports = {
