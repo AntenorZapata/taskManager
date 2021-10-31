@@ -25,5 +25,10 @@ describe('Get all tasks in the DB', () => {
       await taskController.getAll(request, response);
       expect(response.status.calledWith(200)).to.be.eq(true);
     });
+
+    it('should return an array in json format', async () => {
+      await taskController.getAll(request, response);
+      expect(response.json.calledWith(sinon.match.array)).to.be.eq(true);
+    });
   });
 });
