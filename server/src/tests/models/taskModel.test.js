@@ -24,6 +24,18 @@ after(async () => {
   await DBServer.stop();
 });
 
+const FIRST_TASK = {
+  task: 'Atualizar Curriculo',
+  author: 'antenor@gmail.com',
+  category: 'curriculo',
+};
+
+const SECOND_TASK = {
+  task: 'Demitir instrutores :P (sorry)',
+  author: 'antenor@gmail.com',
+  category: 'Equipe',
+};
+
 describe('Get all tasks', () => {
   describe('When there is no task', async () => {
     it('should return an array', async () => {
@@ -40,7 +52,7 @@ describe('Get all tasks', () => {
   describe('when there is at least one task', async () => {
     before(async () => {
       await connectionMock.db('TaskManager').collection('tasks')
-        .insertOne({ task: 'Atualizar Curriculo', author: 'antenor@gmail.com', category: 'curriculo' });
+        .insertOne(FIRST_TASK);
     });
 
     after(async () => {
@@ -71,8 +83,7 @@ describe('Get all tasks', () => {
   describe('when there is more than one task', async () => {
     before(async () => {
       await connectionMock.db('TaskManager').collection('tasks')
-        .insertMany([{ task: 'Atualizar Curriculo', author: 'antenor@gmail.com', category: 'curriculo' },
-          { task: 'Atualizar Curriculo', author: 'antenor@gmail.com', category: 'curriculo' }]);
+        .insertMany([FIRST_TASK, SECOND_TASK]);
     });
 
     after(async () => {
@@ -89,7 +100,7 @@ describe('Get all tasks', () => {
 describe('Get task by author', () => {
   before(async () => {
     await connectionMock.db('TaskManager').collection('tasks')
-      .insertOne({ task: 'Atualizar Curriculo', author: 'antenor@gmail.com', category: 'curriculo' });
+      .insertOne(FIRST_TASK);
   });
 
   after(async () => {
@@ -107,12 +118,17 @@ describe('Get task by author', () => {
     const task = await taskModel.getByAuthor(author);
     expect(task).to.include.all.keys('author', 'task', 'category');
   });
+
+  it('should return null when author does not exist', async () => {
+    const currTask = await taskModel.getByAuthor('lops@gmail.com');
+    expect(currTask).to.be.eq(null);
+  });
 });
 
-describe.only('Get task by Id', () => {
+describe('Get task by Id', () => {
   before(async () => {
     await connectionMock.db('TaskManager').collection('tasks')
-      .insertOne({ task: 'Atualizar Curriculo', author: 'antenor@gmail.com', category: 'curriculo' });
+      .insertOne(FIRST_TASK);
   });
 
   after(async () => {
@@ -134,5 +150,27 @@ describe.only('Get task by Id', () => {
     const [{ id } = task] = await taskModel.getAll();
     const currTask = await taskModel.getById(id);
     expect(currTask).to.include.all.keys('author', 'task', 'category');
+  });
+});
+
+describe.only('Create Task', () => {
+  beforeEach(async () => {
+    await connectionMock.db('TaskManager').collection('tasks').deleteMany();
+  });
+
+  after(async () => {
+    await connectionMock.db('TaskManager').collection('tasks').deleteMany();
+  });
+
+  it('should return an array with length of 1', async () => {
+    await taskModel.create(FIRST_TASK);
+    const task = await taskModel.getAll();
+    expect(task.length).to.be.eq(1);
+  });
+
+  it('should add one Task', async () => {
+    await taskModel.create(FIRST_TASK);
+    const [task] = await taskModel.getAll();
+    expect(task).to.be.an('object');
   });
 });
