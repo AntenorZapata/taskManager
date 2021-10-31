@@ -21,7 +21,7 @@ const getByAuthor = async (author) => {
 };
 
 const getAll = async () => connection().then((db) => db
-  .collection('tasks').find().toArray());
+  .collection('tasks').find().toArray()).then((tasks) => tasks.map(({ _id, ...task }) => ({ id: _id, ...task })));
 
 module.exports = {
   create,

@@ -7,11 +7,6 @@ const create = async (body) => {
   return task;
 };
 
-const getByAuthor = async (author) => {
-  const task = await taskModel.getByAuthor(author);
-  return task;
-};
-
 const getAll = async () => {
   const tasks = await taskModel.getAll();
   return tasks;
@@ -19,6 +14,6 @@ const getAll = async () => {
 
 module.exports = {
   create,
-  getByAuthor,
+
   getAll,
 };
