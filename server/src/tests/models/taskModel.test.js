@@ -10,8 +10,8 @@ let connectionMock;
 
 before(async () => {
   const urlMock = await DBServer.getUri(); // Pega o url do servidor em memória
-  // "mocka" uma conexão
-  connectionMock = await MongoClient.connect(urlMock, {
+
+  connectionMock = await MongoClient.connect(urlMock, { // "mocka" uma conexão
     useNewUrlParser: true,
     useUnifiedTopology: true,
   });
@@ -26,6 +26,7 @@ after(async () => {
 });
 
 const INVALID_ID = '617de3e7a58167cdd5f4213a';
+const FIRST_ID = ObjectId('60e770a1f02f7e8cab42588a');
 
 const FIRST_TASK = {
   task: 'Atualizar Curriculo',
@@ -39,16 +40,9 @@ const SECOND_TASK = {
   category: 'Equipe',
 };
 
-const FIRST_ID = ObjectId('60e770a1f02f7e8cab42588a');
-// const VALID_ID_2 = ObjectId('60e770a1f02f7e8cab42589a');
-
 const TASK_UPDATE = {
   _id: FIRST_ID,
   ...FIRST_TASK,
-};
-
-const NEW_TASK = {
-  id: FIRST_ID,
 };
 
 describe('Get all tasks', () => {

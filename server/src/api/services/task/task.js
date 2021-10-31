@@ -1,4 +1,4 @@
-const { validateTask } = require('../validations/taskValidations');
+const { validateTask, checkIfTaskExists } = require('../validations/taskValidations');
 const taskModel = require('../../models');
 
 const create = async (body) => {
@@ -13,16 +13,19 @@ const getAll = async () => {
 };
 
 const getById = async (id) => {
+  await checkIfTaskExists(id);
   const task = await taskModel.getById(id);
   return task;
 };
 
 const remove = async (id) => {
+  await checkIfTaskExists(id);
   await taskModel.remove(id);
 };
 
 const update = async (id, body) => {
   await validateTask(body);
+  await checkIfTaskExists(id);
   const task = await taskModel.update(id, body);
   return task;
 };
