@@ -108,3 +108,31 @@ describe('Get task by author', () => {
     expect(task).to.include.all.keys('author', 'task', 'category');
   });
 });
+
+describe.only('Get task by Id', () => {
+  before(async () => {
+    await connectionMock.db('TaskManager').collection('tasks')
+      .insertOne({ task: 'Atualizar Curriculo', author: 'antenor@gmail.com', category: 'curriculo' });
+  });
+
+  after(async () => {
+    await connectionMock.db('TaskManager').collection('tasks').deleteMany();
+  });
+
+  it('should return a task', async () => {
+    const [{ id } = task] = await taskModel.getAll();
+    const currTask = await taskModel.getById(id);
+    expect(currTask).to.be.an('object');
+  });
+
+  it('should return null when id does not exist', async () => {
+    const currTask = await taskModel.getById('617de3e7a58167cdd5f4213a');
+    expect(currTask).to.be.eq(null);
+  });
+
+  it("should return an object with the properties 'author', 'task', 'category'", async () => {
+    const [{ id } = task] = await taskModel.getAll();
+    const currTask = await taskModel.getById(id);
+    expect(currTask).to.include.all.keys('author', 'task', 'category');
+  });
+});
