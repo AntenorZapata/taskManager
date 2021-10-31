@@ -21,6 +21,13 @@ const SECOND_TASK = {
   category: 'test_category',
 };
 
+const CREATE_RETURN = {
+  status: 'success',
+  id: '617efb66818cd455a0b5835c',
+};
+
+const NULL = null;
+
 describe('Get all tasks in the DB', () => {
   describe('When there is no task in the DB', async () => {
     const request = {};
@@ -128,7 +135,7 @@ describe('Get task by Id Controller', () => {
     const response = {};
 
     before(() => {
-      sinon.stub(taskService, 'getById').resolves(null);
+      sinon.stub(taskService, 'getById').resolves({});
 
       request.body = {};
       request.params = INVALID_ID;
@@ -141,10 +148,89 @@ describe('Get task by Id Controller', () => {
       taskService.getById.restore();
     });
 
-    it('should return an error', async () => {
+    it('should return an empty object', async () => {
       await taskController.getById(request, response);
       expect(response.status.calledWith(200)).to.be.equal(true);
       expect(response.json.calledWith(sinon.match.object)).to.be.equal(true);
     });
+  });
+});
+
+describe('Create a Task Controller', () => {
+  describe('When the fields are correct', () => {
+    const request = {};
+    const response = {};
+
+    before(() => {
+      sinon.stub(taskService, 'create').resolves(CREATE_RETURN);
+
+      request.body = {};
+
+      response.status = sinon.stub().returns(response);
+      response.json = sinon.stub().returns(response);
+    });
+
+    after(() => {
+      taskService.create.restore();
+    });
+
+    it('should create a task', async () => {
+      await taskController.create(request, response);
+      expect(response.status.calledWith(201)).to.be.equal(true);
+      expect(response.json.calledWith(sinon.match.object)).to.be.equal(true);
+      expect(response.json.calledWith(CREATE_RETURN)).to.be.equal(true);
+    });
+  });
+});
+
+describe('Remove a Task Controller', () => {
+  describe('When the fields are correct', () => {
+    const request = {};
+    const response = {};
+
+    before(() => {
+      sinon.stub(taskService, 'remove').resolves(NULL);
+
+      request.body = {};
+      request.params = TASK_ID;
+
+      response.status = sinon.stub().returns(response);
+      response.json = sinon.stub().returns(response);
+    });
+
+    after(() => {
+      taskService.remove.restore();
+    });
+
+    it('should remove a task', async () => {
+      await taskController.remove(request, response);
+      expect(response.status.calledWith(204)).to.be.equal(true);
+      expect(response.json.calledWith(NULL)).to.be.equal(true);
+    });
+  });
+});
+
+describe('Update a task Controller', () => {
+  const request = {};
+  const response = {};
+
+  before(() => {
+    sinon.stub(taskService, 'update').resolves(FIRST_TASK);
+
+    request.params = TASK_ID;
+
+    response.status = sinon.stub().returns(response);
+    response.json = sinon.stub().returns(response);
+  });
+
+  after(() => {
+    taskService.update.restore();
+  });
+
+  it('should return an object', async () => {
+    await taskController.update(request, response);
+    expect(response.status.calledWith(200)).to.be.equal(true);
+    expect(response.json.calledWith(sinon.match.object)).to.be.equal(true);
+    expect(response.json.calledWith(FIRST_TASK)).to.be.equal(true);
   });
 });
