@@ -17,8 +17,13 @@ const getById = async (id) => {
   return task;
 };
 
+const remove = async (id) => {
+
+};
+
 module.exports = {
   create,
   getById,
   getAll,
+  remove,
 };

@@ -16,8 +16,14 @@ const getById = rescue(async (req, res) => {
   return res.status(200).json(task);
 });
 
+const remove = rescue(async (req, res) => {
+  const task = await taskService.remove(req.params.id);
+  return res.status(204).json(task);
+});
+
 module.exports = {
   create,
   getAll,
   getById,
+  remove,
 };
