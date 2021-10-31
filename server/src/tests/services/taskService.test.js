@@ -146,10 +146,6 @@ describe('Get task by Id Service', () => {
     it('should return a task', async () => {
       const task = await taskService.getById(TASK_ID);
       expect(task).to.be.an('object');
-    });
-
-    it("should return an object with the properties 'author', 'task', 'category'", async () => {
-      const task = await taskService.getById(TASK_ID);
       expect(task).to.include.all.keys('author', 'task', 'category');
     });
   });
