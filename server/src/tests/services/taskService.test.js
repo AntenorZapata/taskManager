@@ -110,4 +110,24 @@ describe('Get task by Id Service', () => {
       }
     });
   });
+
+  describe('when there is at least one task', async () => {
+    before(async () => {
+      sinon.stub(taskModel, 'getById').resolves(FIRST_TASK);
+    });
+
+    after(async () => {
+      taskModel.getById.restore();
+    });
+
+    it('should return a task', async () => {
+      const task = await taskService.getById(TASK_ID);
+      expect(task).to.be.an('object');
+    });
+
+    it("should return an object with the properties 'author', 'task', 'category'", async () => {
+      const task = await taskService.getById(TASK_ID);
+      expect(task).to.include.all.keys('author', 'task', 'category');
+    });
+  });
 });
