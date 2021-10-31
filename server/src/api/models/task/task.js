@@ -20,12 +20,8 @@ const getByAuthor = async (author) => {
   return task;
 };
 
-const getAll = async () => {
-  const tasks = await connection().then((db) => db
-    .collection('tasks').find().toArray());
-
-  return tasks;
-};
+const getAll = async () => connection().then((db) => db
+  .collection('tasks').find().toArray());
 
 module.exports = {
   create,
