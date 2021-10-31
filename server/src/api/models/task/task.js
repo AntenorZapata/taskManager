@@ -27,9 +27,12 @@ const getAll = async () => connection().then((db) => db
 
 const getById = async (id) => connection().then((db) => db.collection('tasks').findOne(ObjectId(id)));
 
+const remove = async (id) => connection().then((db) => db.collection('tasks').findOneAndDelete({ _id: ObjectId(id) }));
+
 module.exports = {
   create,
   getByAuthor,
   getAll,
   getById,
+  remove,
 };

@@ -17,8 +17,8 @@ const getById = rescue(async (req, res) => {
 });
 
 const remove = rescue(async (req, res) => {
-  const task = await taskService.remove(req.params.id);
-  return res.status(204).json(task);
+  await taskService.remove(req.params.id);
+  return res.status(204).json(null);
 });
 
 module.exports = {

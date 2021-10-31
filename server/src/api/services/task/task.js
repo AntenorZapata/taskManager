@@ -18,7 +18,7 @@ const getById = async (id) => {
 };
 
 const remove = async (id) => {
-
+  await taskModel.remove(id);
 };
 
 module.exports = {
