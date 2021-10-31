@@ -21,8 +21,9 @@ const remove = async (id) => {
   await taskModel.remove(id);
 };
 
-const update = async (req, res) => {
-  const task = await taskModel.update(req.params.id);
+const update = async (id, body) => {
+  await validateTask(body);
+  const task = await taskModel.update(id, body);
   return task;
 };
 

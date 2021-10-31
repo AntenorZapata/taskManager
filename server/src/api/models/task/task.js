@@ -10,14 +10,12 @@ const create = async ({ task, author, category }) => {
       status: 'Em andamento',
       createAt: Date(),
     }));
-
   return { status: 'success', id: insertedId };
 };
 
 const getByAuthor = async (author) => {
   const task = await connection().then((db) => db
     .collection('tasks').findOne({ author }));
-
   return task;
 };
 
@@ -25,9 +23,19 @@ const getAll = async () => connection().then((db) => db
   .collection('tasks').find().toArray())
   .then((tasks) => tasks.map(({ _id, ...task }) => ({ id: _id, ...task })));
 
-const getById = async (id) => connection().then((db) => db.collection('tasks').findOne(ObjectId(id)));
+const getById = async (id) => connection()
+  .then((db) => db.collection('tasks').findOne(ObjectId(id)));
 
-const remove = async (id) => connection().then((db) => db.collection('tasks').findOneAndDelete({ _id: ObjectId(id) }));
+const remove = async (id) => connection()
+  .then((db) => db.collection('tasks').findOneAndDelete({ _id: ObjectId(id) }));
+
+const update = async (id, body) => {
+  await connection().then((db) => db
+    .collection('tasks').updateOne({ _id: ObjectId(id) }, { $set: body }));
+
+  const updateTask = await getById(id);
+  return updateTask;
+};
 
 module.exports = {
   create,
@@ -35,4 +43,5 @@ module.exports = {
   getAll,
   getById,
   remove,
+  update,
 };

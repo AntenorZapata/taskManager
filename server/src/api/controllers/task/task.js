@@ -22,7 +22,7 @@ const remove = rescue(async (req, res) => {
 });
 
 const update = rescue(async (req, res) => {
-  const task = await taskService.update(req.params.id);
+  const task = await taskService.update(req.params.id, req.body);
   return res.status(200).json(task);
 });
 
