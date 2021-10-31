@@ -1,5 +1,5 @@
 const {
-  create, getByAuthor, getAll, getById, remove,
+  create, getByAuthor, getAll, getById, remove, update,
 } = require('./task/task');
 
 module.exports = {
@@ -8,4 +8,5 @@ module.exports = {
   getAll,
   getById,
   remove,
+  update,
 };

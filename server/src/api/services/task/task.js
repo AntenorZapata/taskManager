@@ -21,9 +21,15 @@ const remove = async (id) => {
   await taskModel.remove(id);
 };
 
+const update = async (req, res) => {
+  const task = await taskModel.update(req.params.id);
+  return task;
+};
+
 module.exports = {
   create,
   getById,
   getAll,
   remove,
+  update,
 };

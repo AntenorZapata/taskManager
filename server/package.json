@@ -6,9 +6,6 @@
   "scripts": {
     "start": "node ./src/api/server.js",
     "debug": "nodemon ./src/api/server.js",
-    "prestart": "npx sequelize-cli db:create && npx sequelize-cli db:migrate $",
-    "drop": "npx sequelize-cli db:drop $",
-    "seed": "npx sequelize-cli db:seed:all $",
     "test": "mocha ./src/tests/**/*$NAME*.test.js --exit",
     "test-coverage": "jest --runInBand --coverage",
     "lint": "eslint --no-inline-config --no-error-on-unmatched-pattern -c .eslintrc.json ."
