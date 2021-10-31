@@ -29,9 +29,9 @@ const getById = async (id) => connection()
 const remove = async (id) => connection()
   .then((db) => db.collection('tasks').findOneAndDelete({ _id: ObjectId(id) }));
 
-const update = async (id, body) => {
+const update = async (id, { author, task, category }) => {
   await connection().then((db) => db
-    .collection('tasks').updateOne({ _id: ObjectId(id) }, { $set: body }));
+    .collection('tasks').updateOne({ _id: ObjectId(id) }, { $set: { author, task, category } }));
 
   const updateTask = await getById(id);
   return updateTask;

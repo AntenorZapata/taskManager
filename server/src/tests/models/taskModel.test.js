@@ -2,6 +2,7 @@ const sinon = require('sinon');
 const { expect } = require('chai');
 const { MongoClient } = require('mongodb');
 const { MongoMemoryServer } = require('mongodb-memory-server');
+const { ObjectId } = require('mongodb');
 const taskModel = require('../../api/models');
 
 const DBServer = new MongoMemoryServer(); // Sobe servidor do MongoDB em memória
@@ -24,6 +25,8 @@ after(async () => {
   await DBServer.stop();
 });
 
+const INVALID_ID = '617de3e7a58167cdd5f4213a';
+
 const FIRST_TASK = {
   task: 'Atualizar Curriculo',
   author: 'antenor@gmail.com',
@@ -36,7 +39,17 @@ const SECOND_TASK = {
   category: 'Equipe',
 };
 
-const INVALID_ID = '617de3e7a58167cdd5f4213a';
+const FIRST_ID = ObjectId('60e770a1f02f7e8cab42588a');
+// const VALID_ID_2 = ObjectId('60e770a1f02f7e8cab42589a');
+
+const TASK_UPDATE = {
+  _id: FIRST_ID,
+  ...FIRST_TASK,
+};
+
+const NEW_TASK = {
+  id: FIRST_ID,
+};
 
 describe('Get all tasks', () => {
   describe('When there is no task', async () => {
@@ -197,10 +210,10 @@ describe('Remove a task', () => {
   });
 });
 
-describe.only('Update a task', () => {
+describe('Update a task', () => {
   before(async () => {
     await connectionMock.db('TaskManager').collection('tasks')
-      .insertOne(FIRST_TASK);
+      .insertOne(TASK_UPDATE);
   });
 
   after(async () => {
@@ -208,16 +221,16 @@ describe.only('Update a task', () => {
   });
 
   it('should return null when id does not exist', async () => {
-    const updateTask = await taskModel.update(INVALID_ID, SECOND_TASK);
+    const updateTask = await taskModel.update('617ea58cac74b34c09530650', SECOND_TASK);
     expect(updateTask).to.be.null;
   });
 
   it('should return an object with new values', async () => {
-    const currTask = await taskModel.getByAuthor(FIRST_TASK.author);
+    const currTask = await taskModel.getById(FIRST_ID);
     expect(currTask.category).to.be.eq(FIRST_TASK.category);
     expect(currTask.task).to.be.eq(FIRST_TASK.task);
-    const { _id } = currTask;
-    const newTask = await taskModel.update(_id, SECOND_TASK);
+
+    const newTask = await taskModel.update(FIRST_ID, SECOND_TASK);
     expect(newTask).to.be.an('object');
     expect(newTask.category).to.be.eq(SECOND_TASK.category);
     expect(newTask.task).to.be.eq(SECOND_TASK.task);
