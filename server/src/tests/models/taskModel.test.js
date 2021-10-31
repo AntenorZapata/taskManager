@@ -177,6 +177,13 @@ describe('Create a Task', () => {
     expect(task.length).to.be.eq(1);
   });
 
+  it('should return an object with the properties "status" and "id"', async () => {
+    const taskReturn = await taskModel.create(FIRST_TASK);
+    expect(taskReturn).to.be.an('object');
+    expect(taskReturn.status).to.be.eq('success');
+    expect(taskReturn).has.property('id');
+  });
+
   it('should add one Task', async () => {
     await taskModel.create(FIRST_TASK);
     const [task] = await taskModel.getAll();

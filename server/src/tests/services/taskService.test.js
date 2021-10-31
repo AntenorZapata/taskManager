@@ -15,11 +15,36 @@ const FIRST_TASK = {
   category: 'task_category',
 };
 
+const VALID_TASK = {
+  task: 'task',
+  author: 'antenor@gmail.com',
+  category: 'task_category',
+};
+
 const SECOND_TASK = {
   id: TASK_ID,
   task: 'test_task',
   author: 'test_author',
   category: 'test_category',
+};
+
+const CREATE_RETURN = {
+  status: 'success',
+  id: '617efb66818cd455a0b5835c',
+};
+
+const INCORRECT_CATEGORY = {
+  id: TASK_ID,
+  task: 'task',
+  author: 'antenor@gmail.com',
+  category: '',
+};
+
+const INCORRECT_TASK = {
+  id: TASK_ID,
+  task: '',
+  author: 'antenor@gmail.com',
+  category: 'Category_test',
 };
 
 describe('Get all tasks Service', () => {
@@ -111,7 +136,7 @@ describe('Get task by Id Service', () => {
     });
   });
 
-  describe('when there is at least one task', async () => {
+  describe('when task exists', async () => {
     before(async () => {
       sinon.stub(taskModel, 'getById').resolves(FIRST_TASK);
     });
@@ -129,5 +154,72 @@ describe('Get task by Id Service', () => {
       const task = await taskService.getById(TASK_ID);
       expect(task).to.include.all.keys('author', 'task', 'category');
     });
+  });
+});
+
+describe('Create a Task Service', () => {
+  describe('When the fields are correct', () => {
+    before(async () => {
+      sinon.stub(taskModel, 'create').resolves(CREATE_RETURN);
+    });
+
+    after(async () => {
+      taskModel.create.restore();
+    });
+
+    it('should create a task', async () => {
+      const task = await taskService.create(VALID_TASK);
+      expect(task).to.be.an('object');
+      expect(task).haveOwnProperty('status');
+      expect(task).haveOwnProperty('id');
+    });
+  });
+
+  describe('When the fields are incorrect', () => {
+    it('should return an error of author', async () => {
+      try {
+        await taskService.create(FIRST_TASK);
+      } catch (err) {
+        expect(err).to.be.an('error');
+        expect(err.message).to.be.eq('"author" must be a valid email');
+        expect(err.code).to.be.eq('invalid_fields');
+        expect(err.statusCode).to.be.eq(400);
+      }
+    });
+  });
+
+  it('should return an error of category', async () => {
+    try {
+      await taskService.create(INCORRECT_CATEGORY);
+    } catch (err) {
+      expect(err).to.be.an('error');
+      expect(err.message).to.be.eq('"category" is not allowed to be empty');
+      expect(err.code).to.be.eq('invalid_fields');
+      expect(err.statusCode).to.be.eq(400);
+    }
+  });
+
+  it('should return an error of task', async () => {
+    try {
+      await taskService.create(INCORRECT_TASK);
+    } catch (err) {
+      expect(err).to.be.an('error');
+      expect(err.message).to.be.eq('"task" is not allowed to be empty');
+      expect(err.code).to.be.eq('invalid_fields');
+      expect(err.statusCode).to.be.eq(400);
+    }
+  });
+});
+
+describe('Remove a task Service', () => {
+  it('should return an error if task does not exist', async () => {
+    try {
+      await taskService.remove(INCORRECT_TASK.id);
+    } catch (err) {
+      expect(err).to.be.an('error');
+      expect(err.message).to.be.eq('Task does not exist');
+      expect(err.code).to.be.eq('not_found');
+      expect(err.statusCode).to.be.eq(404);
+    }
   });
 });

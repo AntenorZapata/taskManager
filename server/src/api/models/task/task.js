@@ -33,8 +33,10 @@ const getById = async (id) => connection()
 
 // Delete
 
-const remove = async (id) => connection()
-  .then((db) => db.collection('tasks').findOneAndDelete({ _id: ObjectId(id) }));
+const remove = async (id) => {
+  await connection()
+    .then((db) => db.collection('tasks').findOneAndDelete({ _id: ObjectId(id) }));
+};
 
 // Update
 
