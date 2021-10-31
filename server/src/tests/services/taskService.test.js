@@ -110,41 +110,4 @@ describe('Get task by Id Service', () => {
       }
     });
   });
-
-  describe('when there is at least one task', async () => {
-    before(async () => {
-      sinon.stub(taskModel, 'getById').resolves(FIRST_TASK);
-    });
-
-    after(async () => {
-      taskModel.getById.restore();
-    });
-
-    it('should return a task', async () => {
-      const task = await taskService.getById(TASK_ID);
-      expect(task).to.be.an('object');
-    });
-
-    it("should return an object with the properties 'author', 'task', 'category'", async () => {
-      const task = await taskService.getById(TASK_ID);
-      expect(task).to.include.all.keys('author', 'task', 'category');
-    });
-  });
-
-  // it('should return a task', async () => {
-  //   const [{ id } = task] = await taskService.getAll();
-  //   const currTask = await taskService.getById(id);
-  //   expect(currTask).to.be.an('object');
-  // });
-
-  // it('should return null when id does not exist', async () => {
-  //   const currTask = await taskModel.getById(INVALID_ID);
-  //   expect(currTask).to.be.null;
-  // });
-
-  // it("should return an object with the properties 'author', 'task', 'category'", async () => {
-  //   const [{ id } = task] = await taskModel.getAll();
-  //   const currTask = await taskModel.getById(id);
-  //   expect(currTask).to.include.all.keys('author', 'task', 'category');
-  // });
 });
