@@ -36,6 +36,8 @@ const SECOND_TASK = {
   category: 'Equipe',
 };
 
+const INVALID_ID = '617de3e7a58167cdd5f4213a';
+
 describe('Get all tasks', () => {
   describe('When there is no task', async () => {
     it('should return an array', async () => {
@@ -121,7 +123,7 @@ describe('Get task by author', () => {
 
   it('should return null when author does not exist', async () => {
     const currTask = await taskModel.getByAuthor('lops@gmail.com');
-    expect(currTask).to.be.eq(null);
+    expect(currTask).to.be.null;
   });
 });
 
@@ -142,8 +144,8 @@ describe('Get task by Id', () => {
   });
 
   it('should return null when id does not exist', async () => {
-    const currTask = await taskModel.getById('617de3e7a58167cdd5f4213a');
-    expect(currTask).to.be.eq(null);
+    const currTask = await taskModel.getById(INVALID_ID);
+    expect(currTask).to.be.null;
   });
 
   it("should return an object with the properties 'author', 'task', 'category'", async () => {
@@ -192,5 +194,32 @@ describe('Remove a task', () => {
     await taskModel.remove(id);
     const newTasks = await taskModel.getAll();
     expect(newTasks.length).to.be.eq(0);
+  });
+});
+
+describe.only('Update a task', () => {
+  before(async () => {
+    await connectionMock.db('TaskManager').collection('tasks')
+      .insertOne(FIRST_TASK);
+  });
+
+  after(async () => {
+    await connectionMock.db('TaskManager').collection('tasks').deleteMany();
+  });
+
+  it('should return null when id does not exist', async () => {
+    const updateTask = await taskModel.update(INVALID_ID, SECOND_TASK);
+    expect(updateTask).to.be.null;
+  });
+
+  it('should return an object with new values', async () => {
+    const currTask = await taskModel.getByAuthor(FIRST_TASK.author);
+    expect(currTask.category).to.be.eq(FIRST_TASK.category);
+    expect(currTask.task).to.be.eq(FIRST_TASK.task);
+    const { _id } = currTask;
+    const newTask = await taskModel.update(_id, SECOND_TASK);
+    expect(newTask).to.be.an('object');
+    expect(newTask.category).to.be.eq(SECOND_TASK.category);
+    expect(newTask.task).to.be.eq(SECOND_TASK.task);
   });
 });
