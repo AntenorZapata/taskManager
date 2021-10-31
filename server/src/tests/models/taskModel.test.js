@@ -153,7 +153,7 @@ describe('Get task by Id', () => {
   });
 });
 
-describe.only('Create Task', () => {
+describe('Create a Task', () => {
   beforeEach(async () => {
     await connectionMock.db('TaskManager').collection('tasks').deleteMany();
   });
@@ -172,5 +172,25 @@ describe.only('Create Task', () => {
     await taskModel.create(FIRST_TASK);
     const [task] = await taskModel.getAll();
     expect(task).to.be.an('object');
+  });
+});
+
+describe('Remove a task', () => {
+  before(async () => {
+    await connectionMock.db('TaskManager').collection('tasks')
+      .insertOne(FIRST_TASK);
+  });
+
+  after(async () => {
+    await connectionMock.db('TaskManager').collection('tasks').deleteMany();
+  });
+
+  it('should return an empty array', async () => {
+    const tasks = await taskModel.getAll();
+    expect(tasks.length).to.be.eq(1);
+    const [{ id } = task] = await taskModel.getAll();
+    await taskModel.remove(id);
+    const newTasks = await taskModel.getAll();
+    expect(newTasks.length).to.be.eq(0);
   });
 });
