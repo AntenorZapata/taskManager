@@ -1,3 +1,4 @@
+const { ObjectId } = require('mongodb');
 const connection = require('../../config/connection');
 
 const create = async ({ task, author, category }) => {
@@ -21,10 +22,14 @@ const getByAuthor = async (author) => {
 };
 
 const getAll = async () => connection().then((db) => db
-  .collection('tasks').find().toArray()).then((tasks) => tasks.map(({ _id, ...task }) => ({ id: _id, ...task })));
+  .collection('tasks').find().toArray())
+  .then((tasks) => tasks.map(({ _id, ...task }) => ({ id: _id, ...task })));
+
+const getById = async (id) => connection().then((db) => db.collection('tasks').findOne(ObjectId(id)));
 
 module.exports = {
   create,
   getByAuthor,
   getAll,
+  getById,
 };
