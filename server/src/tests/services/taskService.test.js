@@ -2,8 +2,6 @@ const sinon = require('sinon');
 const { expect } = require('chai');
 const taskService = require('../../api/services');
 const taskModel = require('../../api/models');
-const { ApiError } = require('../../api/utils/ApiError');
-const { checkIfTaskExists } = require('../../api/services/validations/taskValidations');
 
 const TASK_ID = '617eee34bae0b65c7efad261';
 const INVALID_ID = '617eee34bae0b65c7efad262';
@@ -24,7 +22,7 @@ const VALID_TASK = {
 const SECOND_TASK = {
   id: TASK_ID,
   task: 'test_task',
-  author: 'test_author',
+  author: 'antenor@gmail.com',
   category: 'test_category',
 };
 
@@ -215,6 +213,27 @@ describe('Remove a task Service', () => {
   it('should return an error if task does not exist', async () => {
     try {
       await taskService.remove(INCORRECT_TASK.id);
+    } catch (err) {
+      expect(err).to.be.an('error');
+      expect(err.message).to.be.eq('Task does not exist');
+      expect(err.code).to.be.eq('not_found');
+      expect(err.statusCode).to.be.eq(404);
+    }
+  });
+});
+
+describe('Update a task Service', () => {
+  before(async () => {
+    sinon.stub(taskModel, 'update').resolves(SECOND_TASK);
+  });
+
+  after(async () => {
+    taskModel.update.restore();
+  });
+
+  it('should return an error if task does not exist', async () => {
+    try {
+      await taskService.remove(INVALID_ID);
     } catch (err) {
       expect(err).to.be.an('error');
       expect(err.message).to.be.eq('Task does not exist');
