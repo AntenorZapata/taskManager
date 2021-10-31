@@ -12,8 +12,13 @@ const getAll = async () => {
   return tasks;
 };
 
+const getById = async (id) => {
+  const task = await taskModel.getById(id);
+  return task;
+};
+
 module.exports = {
   create,
-
+  getById,
   getAll,
 };

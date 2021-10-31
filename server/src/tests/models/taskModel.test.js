@@ -85,11 +85,6 @@ describe('Get task by author', () => {
     expect(task).to.be.an('object');
   });
 
-  it('should return an object with the propertie "author" ', async () => {
-    const task = await taskModel.getByAuthor(author);
-    expect(task.author).to.be.equal(author);
-  });
-
   it("should return an object with the properties 'author', 'task', 'category'", async () => {
     const task = await taskModel.getByAuthor(author);
     expect(task).to.include.all.keys('author', 'task', 'category');

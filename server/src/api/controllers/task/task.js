@@ -11,7 +11,13 @@ const getAll = rescue(async (req, res) => {
   return res.status(200).json(tasks);
 });
 
+const getById = rescue(async (req, res) => {
+  const task = await taskService.getById(req.params.id);
+  return res.status(200).json(task);
+});
+
 module.exports = {
   create,
   getAll,
+  getById,
 };
