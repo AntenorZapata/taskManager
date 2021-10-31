@@ -2,6 +2,24 @@ const { expect } = require('chai');
 const sinon = require('sinon');
 const taskController = require('../../api/controllers');
 const taskService = require('../../api/services');
+const { ApiError } = require('../../api/utils/ApiError');
+
+const TASK_ID = '617eee34bae0b65c7efad261';
+const INVALID_ID = '617eee34bae0b65c7efad262';
+
+const FIRST_TASK = {
+  id: TASK_ID,
+  task: 'task',
+  author: 'task_author',
+  category: 'task_category',
+};
+
+const SECOND_TASK = {
+  id: TASK_ID,
+  task: 'test_task',
+  author: 'antenor@gmail.com',
+  category: 'test_category',
+};
 
 describe('Get all tasks in the DB', () => {
   describe('When there is no task in the DB', async () => {
@@ -29,6 +47,104 @@ describe('Get all tasks in the DB', () => {
     it('should return an array in json format', async () => {
       await taskController.getAll(request, response);
       expect(response.json.calledWith(sinon.match.array)).to.be.eq(true);
+    });
+  });
+
+  describe('When there is at least one task in the DB', async () => {
+    const request = {};
+    const response = {};
+
+    before(() => {
+      sinon.stub(taskService, 'getAll').resolves([FIRST_TASK]);
+
+      request.body = {};
+
+      response.status = sinon.stub().returns(response);
+      response.json = sinon.stub().returns(response);
+    });
+
+    after(() => {
+      taskService.getAll.restore();
+    });
+
+    it('should return an array with one task', async () => {
+      await taskController.getAll(request, response);
+      expect(response.json.calledWith([FIRST_TASK])).to.be.eq(true);
+    });
+  });
+
+  describe('When there is many tasks in the DB', async () => {
+    const request = {};
+    const response = {};
+
+    before(() => {
+      sinon.stub(taskService, 'getAll').resolves([FIRST_TASK, SECOND_TASK]);
+
+      request.body = {};
+
+      response.status = sinon.stub().returns(response);
+      response.json = sinon.stub().returns(response);
+    });
+
+    after(() => {
+      taskService.getAll.restore();
+    });
+
+    it('should return an array with two tasks', async () => {
+      await taskController.getAll(request, response);
+      expect(response.json.calledWith([FIRST_TASK, SECOND_TASK])).to.be.eq(true);
+    });
+  });
+});
+
+describe('Get task by Id Controller', () => {
+  describe('When task exists', () => {
+    const request = {};
+    const response = {};
+
+    before(() => {
+      sinon.stub(taskService, 'getById').resolves(FIRST_TASK);
+
+      request.body = {};
+      request.params = FIRST_TASK.id;
+
+      response.status = sinon.stub().returns(response);
+      response.json = sinon.stub().returns(response);
+    });
+
+    after(() => {
+      taskService.getById.restore();
+    });
+
+    it('should return a task', async () => {
+      await taskController.getById(request, response);
+      expect(response.status.calledWith(200)).to.be.equal(true);
+      expect(response.json.calledWith(FIRST_TASK)).to.be.eq(true);
+    });
+  });
+
+  describe('When task does not exists', () => {
+    const request = {};
+    const response = {};
+
+    before(() => {
+      sinon.stub(taskService, 'getById').resolves(null);
+
+      request.body = {};
+      request.params = INVALID_ID;
+
+      response.status = sinon.stub().returns(response);
+      response.json = sinon.stub().returns(response);
+    });
+
+    after(() => {
+      taskService.getById.restore();
+    });
+
+    it('should return an error', async () => {
+      await taskController.getById(request, response);
+      expect(response.status.calledWith(200)).to.be.equal(true);
+      expect(response.json.calledWith(sinon.match.object)).to.be.equal(true);
     });
   });
 });
