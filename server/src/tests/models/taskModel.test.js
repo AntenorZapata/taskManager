@@ -19,12 +19,12 @@ before(async () => {
   sinon.stub(MongoClient, 'connect').resolves(connectionMock);
 });
 
-describe('Get all tasks', () => {
-  after(async () => {
-    await MongoClient.connect.restore();
-    await DBServer.stop();
-  });
+after(async () => {
+  await MongoClient.connect.restore();
+  await DBServer.stop();
+});
 
+describe('Get all tasks', () => {
   describe('When there is no task', async () => {
     it('should return an array', async () => {
       const response = await taskModel.getAll();
@@ -67,6 +67,23 @@ describe('Get all tasks', () => {
       expect(task).to.include.all.keys('author', 'task', 'category');
     });
   });
+
+  describe('when there is more than one task', async () => {
+    before(async () => {
+      await connectionMock.db('TaskManager').collection('tasks')
+        .insertMany([{ task: 'Atualizar Curriculo', author: 'antenor@gmail.com', category: 'curriculo' },
+          { task: 'Atualizar Curriculo', author: 'antenor@gmail.com', category: 'curriculo' }]);
+    });
+
+    after(async () => {
+      await connectionMock.db('TaskManager').collection('tasks').deleteMany();
+    });
+
+    it('should return an array with length equal to 2', async () => {
+      const response = await taskModel.getAll();
+      expect(response.length).to.be.equal(2);
+    });
+  });
 });
 
 describe('Get task by author', () => {
@@ -78,6 +95,7 @@ describe('Get task by author', () => {
   after(async () => {
     await connectionMock.db('TaskManager').collection('tasks').deleteMany();
   });
+
   const author = 'antenor@gmail.com';
 
   it('should return an object', async () => {
