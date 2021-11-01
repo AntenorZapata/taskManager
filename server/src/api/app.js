@@ -6,6 +6,7 @@ module.exports = () => {
   const app = express();
   app.use(express.json());
   app.use('/api/v1/task', route.task);
+  app.use('/api/v1/user', route.user);
   app.use(error.errorHandler);
   return app;
 };

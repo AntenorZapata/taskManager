@@ -5,7 +5,7 @@ const register = async ({ name, email, password }) => {
     .collection('user').insertOne({ name, email, password }));
 
   return {
-    name, email, password, _id: insertedId,
+    _id: insertedId, name, email, password,
   };
 };
 
