@@ -32,7 +32,7 @@ const forgotPassword = catchAsync(async (req, res, next) => {
     });
   } catch (err) {
     return next(
-      new AppError(
+      new ApiError(
         'There was an error sending the email. Trye again later!',
         'email_error',
         500,
@@ -41,7 +41,7 @@ const forgotPassword = catchAsync(async (req, res, next) => {
   }
 });
 
-const reset = catchAsync(async (req, res, next) => {
+const resetPassword = catchAsync(async (req, res, next) => {
   const { token } = req.params;
   await userService.reset(token, req.body.password);
   return res.status(200).json({ status: 'success', message: 'password updated' });
@@ -51,6 +51,6 @@ module.exports = {
   register,
   login,
   forgotPassword,
-  reset,
+  resetPassword,
 
 };

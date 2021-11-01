@@ -35,7 +35,8 @@ const forgotPassword = async (email) => {
 const reset = async (token, password) => {
   const hashedToken = generateResetToken().hashedToken(token);
   const user = await userModel.findByHash(hashedToken);
-  const newUser = { ...user, password, passwordResetToken: '' };
+  const hash = await bcryptHelper(password, 'hash');
+  const newUser = { ...user, password: hash, passwordResetToken: '' };
   await userModel.updateUser(newUser);
 };
 
