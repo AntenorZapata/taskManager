@@ -9,6 +9,9 @@ const register = async ({ name, email, password }) => {
   };
 };
 
+const getByEmail = async (email) => connection().then((db) => db.collection('user').findOne({ email }));
+
 module.exports = {
   register,
+  getByEmail,
 };

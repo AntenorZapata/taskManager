@@ -1,4 +1,4 @@
-const { validateTask, checkIfTaskExists } = require('../validations/taskValidations');
+const { validateTask, checkIfTaskExists } = require('../validations/validations');
 const taskModel = require('../../models');
 
 const create = async (body) => {
