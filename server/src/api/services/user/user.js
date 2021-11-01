@@ -1,5 +1,7 @@
 const userModel = require('../../models');
-const { validateUser, checkIfUserExists } = require('../validations/validations');
+const {
+  validateUser, checkIfUserExists, validateUserLogin, correctPassword,
+} = require('../validations/validations');
 
 const register = async (body) => {
   await validateUser(body);
@@ -7,16 +9,10 @@ const register = async (body) => {
   return user;
 };
 
-const login = async ({ email }) => {
-  const password = await checkIfUserExists(email);
-
-  // if (!user) return false;
-  // const correct = await user.correctPassword(password, user.password);
-
-  // return {
-  //   user,
-  //   correct,
-  // };
+const login = async (body) => {
+  validateUserLogin(body);
+  const { email, password } = body;
+  const user = await checkIfUserExists(email);
 };
 
 module.exports = {

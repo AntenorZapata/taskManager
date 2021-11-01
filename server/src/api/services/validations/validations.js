@@ -23,7 +23,9 @@ const checkIfTaskExists = async (id) => {
 };
 
 const checkIfUserExists = async (email) => {
-  const user = await userModel.getByEmail({ email }).select('+password');
+  const user = await userModel.getByEmail(email);
+  if (!user) throw new ApiError('User does not exist', 'not_found', 404);
+  return user;
 };
 
 const validateUser = async (body) => {
@@ -39,9 +41,21 @@ const validateUser = async (body) => {
   }
 };
 
+const validateUserLogin = async (body) => {
+  const { error } = Joi.object({
+    email: Joi.string().email().required(),
+    password: Joi.string().min(6).required(),
+  }).validate(body);
+  if (error) {
+    throw new ApiError(error.details[0].message, 'invalid_fields', 400);
+  }
+};
+
 module.exports = {
   validateTask,
   checkIfTaskExists,
   validateUser,
   checkIfUserExists,
+  validateUserLogin,
+
 };

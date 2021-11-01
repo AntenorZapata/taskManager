@@ -7,7 +7,7 @@ const register = catchAsync(async (req, res, next) => {
 });
 
 const login = catchAsync(async (req, res) => {
-  await userService.login(email, password);
+  await userService.login(req.body);
 });
 
 module.exports = {
