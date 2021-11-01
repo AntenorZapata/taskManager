@@ -1,5 +1,6 @@
 const Joi = require('joi');
 const { ObjectId } = require('mongodb');
+const bcrypt = require('bcryptjs');
 const { ApiError } = require('../../utils/ApiError');
 const taskModel = require('../../models');
 const userModel = require('../../models');
@@ -24,7 +25,7 @@ const checkIfTaskExists = async (id) => {
 
 const checkIfUserExists = async (email) => {
   const user = await userModel.getByEmail(email);
-  if (!user) throw new ApiError('User does not exist', 'not_found', 404);
+  if (!user) throw new ApiError('User does not exist or Incorrect email', 'not_found', 404);
   return user;
 };
 
@@ -51,11 +52,22 @@ const validateUserLogin = async (body) => {
   }
 };
 
+const bcryptHelper = async (pass, mod, userPass = null) => {
+  if (mod === 'hash') {
+    const hashPass = await bcrypt.hash(pass, 10);
+    return hashPass;
+  }
+  const compare = await bcrypt.compare(pass, userPass);
+  if (!compare) throw new ApiError('Incorrect password', 'invalid_fields', 401);
+  return compare;
+};
+
 module.exports = {
   validateTask,
   checkIfTaskExists,
   validateUser,
   checkIfUserExists,
   validateUserLogin,
+  bcryptHelper,
 
 };
