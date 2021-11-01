@@ -8,7 +8,6 @@ const userModel = require('../../models');
 const validateTask = async (body) => {
   const { error } = Joi.object({
     task: Joi.string().required(),
-    author: Joi.string().email().required(),
     category: Joi.string().required(),
   }).validate(body);
   if (error) {

@@ -2,8 +2,7 @@ const taskService = require('../../services');
 const catchAsync = require('../../utils/catchAsync');
 
 const create = catchAsync(async (req, res) => {
-  const { user } = req;
-  const task = await taskService.create(req.body, user);
+  const task = await taskService.create(req.body, req.user);
   return res.status(201).json(task);
 });
 
@@ -23,7 +22,8 @@ const remove = catchAsync(async (req, res) => {
 });
 
 const update = catchAsync(async (req, res) => {
-  const task = await taskService.update(req.params.id, req.body);
+  const { body, user } = req;
+  const task = await taskService.update(req.params.id, body, user);
   return res.status(200).json(task);
 });
 

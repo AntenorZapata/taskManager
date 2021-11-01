@@ -1,9 +1,9 @@
 const { validateTask, checkIfTaskExists } = require('../validations/validations');
 const taskModel = require('../../models');
 
-const create = async (body) => {
+const create = async (body, user) => {
   await validateTask(body);
-  const task = await taskModel.create(body);
+  const task = await taskModel.create(body, user);
   return task;
 };
 
@@ -23,10 +23,10 @@ const remove = async (id) => {
   await taskModel.remove(id);
 };
 
-const update = async (id, body) => {
+const update = async (id, body, user) => {
   await checkIfTaskExists(id);
   await validateTask(body);
-  const task = await taskModel.update(id, body);
+  const task = await taskModel.update(id, body, user);
   return task;
 };
 

@@ -3,11 +3,11 @@ const connection = require('../../config/connection');
 
 // Create
 
-const create = async ({ task, author, category }) => {
+const create = async ({ task, category }, user) => {
   const { insertedId } = await connection().then((db) => db
     .collection('tasks').insertOne({
       task,
-      author,
+      author: user.email,
       category,
       status: 'Em andamento',
       createAt: Date(),
@@ -40,9 +40,10 @@ const remove = async (id) => {
 
 // Update
 
-const update = async (id, { author, task, category }) => {
+const update = async (id, { task, category }, user) => {
   await connection().then((db) => db
-    .collection('tasks').updateOne({ _id: ObjectId(id) }, { $set: { author, task, category } }));
+    .collection('tasks').updateOne({ _id: ObjectId(id) },
+      { $set: { author: user.email, task, category } }));
   const updateTask = await getById(id);
   return updateTask;
 };
