@@ -2,7 +2,9 @@ const {
   create, getByAuthor, getAll, getById, remove, update,
 } = require('./task/task');
 
-const { register, getByEmail } = require('./user/user');
+const {
+  register, getByEmail, findByHash, updateUser,
+} = require('./user/user');
 
 module.exports = {
   create,
@@ -13,4 +15,6 @@ module.exports = {
   remove,
   update,
   register,
+  updateUser,
+  findByHash,
 };

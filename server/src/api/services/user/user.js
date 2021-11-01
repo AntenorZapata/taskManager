@@ -1,7 +1,9 @@
 const userModel = require('../../models');
 const {
   validateUser, checkIfUserExists, validateUserLogin, bcryptHelper,
+  validateEmail,
 } = require('../validations/validations');
+const { generateResetToken } = require('../../utils/generateResetToken');
 
 const register = async ({ name, email, password }) => {
   await validateUser({ name, email, password });
@@ -17,7 +19,20 @@ const login = async (body) => {
   if (validUser) return user;
 };
 
+const forgotPassword = async (email) => {
+  await validateEmail({ email });
+  const user = await checkIfUserExists(email);
+  const { resetToken, hashedToken } = generateResetToken();
+  const newUser = { ...user, passwordResetToken: hashedToken };
+  await userModel.updateUser(newUser);
+
+  const resetUrl = `http://localhost:3000/passwordReset/${resetToken}`;
+  const message = `Update your password: ${resetUrl}`;
+  return { user, message };
+};
+
 module.exports = {
   register,
   login,
+  forgotPassword,
 };

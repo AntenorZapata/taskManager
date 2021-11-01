@@ -42,6 +42,15 @@ const validateUser = async (body) => {
   }
 };
 
+const validateEmail = async (body) => {
+  const { error } = Joi.object({
+    email: Joi.string().email().required(),
+  }).validate(body);
+  if (error) {
+    throw new ApiError(error.details[0].message, 'invalid_fields', 400);
+  }
+};
+
 const validateUserLogin = async (body) => {
   const { error } = Joi.object({
     email: Joi.string().email().required(),
@@ -69,5 +78,5 @@ module.exports = {
   checkIfUserExists,
   validateUserLogin,
   bcryptHelper,
-
+  validateEmail,
 };
