@@ -1,13 +1,13 @@
 const crypto = require('crypto');
 
-const generateResetToken = () => {
-  const resetToken = crypto.randomBytes(20).toString('hex');
-  const hashedToken = crypto
+const generateResetToken = () => ({
+  resetToken: crypto.randomBytes(20).toString('hex'),
+  hashedToken: (token) => crypto
     .createHash('sha256')
-    .update(resetToken)
-    .digest('hex');
-  return { resetToken, hashedToken };
-};
+    .update(token)
+    .digest('hex'),
+
+});
 
 module.exports = {
   generateResetToken,

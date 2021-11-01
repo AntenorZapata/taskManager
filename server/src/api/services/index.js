@@ -2,7 +2,9 @@ const {
   create, getAll, getById, remove, update,
 } = require('./task/task');
 
-const { register, login, forgotPassword } = require('./user/user');
+const {
+  register, login, forgotPassword, reset,
+} = require('./user/user');
 
 module.exports = {
   create,
@@ -13,4 +15,5 @@ module.exports = {
   register,
   login,
   forgotPassword,
+  reset,
 };

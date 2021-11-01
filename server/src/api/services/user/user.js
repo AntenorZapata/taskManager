@@ -23,7 +23,8 @@ const forgotPassword = async (email) => {
   await validateEmail({ email });
   const user = await checkIfUserExists(email);
   const { resetToken, hashedToken } = generateResetToken();
-  const newUser = { ...user, passwordResetToken: hashedToken };
+
+  const newUser = { ...user, passwordResetToken: hashedToken(resetToken) };
   await userModel.updateUser(newUser);
 
   const resetUrl = `http://localhost:3000/passwordReset/${resetToken}`;
@@ -31,8 +32,16 @@ const forgotPassword = async (email) => {
   return { user, message };
 };
 
+const reset = async (token, password) => {
+  const hashedToken = generateResetToken().hashedToken(token);
+  const user = await userModel.findByHash(hashedToken);
+  const newUser = { ...user, password, passwordResetToken: '' };
+  await userModel.updateUser(newUser);
+};
+
 module.exports = {
   register,
   login,
+  reset,
   forgotPassword,
 };
