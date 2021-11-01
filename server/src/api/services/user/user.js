@@ -1,11 +1,13 @@
+const bcrypt = require('bcryptjs');
 const userModel = require('../../models');
 const {
   validateUser, checkIfUserExists, validateUserLogin, correctPassword,
 } = require('../validations/validations');
 
-const register = async (body) => {
-  await validateUser(body);
-  const user = await userModel.register(body);
+const register = async ({ name, email, password }) => {
+  await validateUser({ name, email, password });
+  const hash = await bcrypt.hash(password, 10);
+  const user = await userModel.register({ name, email, password: hash });
   return user;
 };
 
