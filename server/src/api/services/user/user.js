@@ -12,9 +12,8 @@ const register = async ({ name, email, password }) => {
 
 const login = async (body) => {
   await validateUserLogin(body);
-  const { email, password } = body;
-  const user = await checkIfUserExists(email);
-  const validUser = await bcryptHelper(password, 'compare', user.password);
+  const user = await checkIfUserExists(body.email);
+  const validUser = await bcryptHelper(body.password, 'compare', user.password);
   if (validUser) return user;
 };
 

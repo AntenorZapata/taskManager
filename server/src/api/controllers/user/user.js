@@ -1,5 +1,6 @@
 const userService = require('../../services');
 const catchAsync = require('../../utils/catchAsync');
+const { generateToken } = require('../../utils/generateToken');
 
 const register = catchAsync(async (req, res, next) => {
   const user = await userService.register(req.body);
@@ -8,7 +9,8 @@ const register = catchAsync(async (req, res, next) => {
 
 const login = catchAsync(async (req, res) => {
   const userLogin = await userService.login(req.body);
-  if (userLogin) return sendToken(userLogin, 200, res);
+  const token = await generateToken(userLogin);
+  return res.status(200).json({ token });
 });
 
 module.exports = {
