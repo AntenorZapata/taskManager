@@ -15,6 +15,12 @@ const validateTask = async (body) => {
   }
 };
 
+const validateOwnership = async (userEmail, taskEmail) => {
+  if (userEmail !== taskEmail) {
+    throw new ApiError('task does not belong to current user', 'invalid_fields', 400);
+  }
+};
+
 const checkIfTaskExists = async (id) => {
   if (!ObjectId.isValid(id)) throw new ApiError('Invalid ID', 'invalid_fields', 400);
   const task = await taskModel.getById(id);
@@ -84,4 +90,5 @@ module.exports = {
   bcryptHelper,
   checkIfEmailExists,
   validateEmail,
+  validateOwnership,
 };

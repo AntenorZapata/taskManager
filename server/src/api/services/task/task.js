@@ -1,4 +1,4 @@
-const { validateTask, checkIfTaskExists } = require('../validations/validations');
+const { validateTask, checkIfTaskExists, validateOwnership } = require('../validations/validations');
 const taskModel = require('../../models');
 
 const create = async (body, user) => {
@@ -24,10 +24,11 @@ const remove = async (id) => {
 };
 
 const update = async (id, body, user) => {
-  await checkIfTaskExists(id);
+  const task = await checkIfTaskExists(id);
   await validateTask(body);
-  const task = await taskModel.update(id, body, user);
-  return task;
+  await validateOwnership(user.email, task.author);
+  const newTask = await taskModel.update(id, body, user);
+  return newTask;
 };
 
 module.exports = {
