@@ -126,6 +126,7 @@
   text-decoration: none;
   color: #172f49;
   font-size: 0.8rem;
+  margin-top: 0.5rem;
 }
 
 .login__btn {
@@ -187,11 +188,13 @@
 
 .input__error__hidden {
   visibility: hidden;
+  font-size: 0.7rem;
 }
 
 .input__error {
   color: red;
   margin-left: 0.5rem;
+  font-size: 0.7rem;
 }
 
 .input-box .email-valid,
