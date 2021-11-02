@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import LoginForm from '../../components/LoginForm/LoginForm';
-import login from '../../api';
+import { login } from '../../api';
 
 import useValidation from '../../hooks/useValidation';
 import './Login.css';
