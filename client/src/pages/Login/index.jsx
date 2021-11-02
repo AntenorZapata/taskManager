@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import LoginForm from '../../components/LoginForm/LoginForm';
+import login from '../../api';
 
 import useValidation from '../../hooks/useValidation';
 // import Header from '../../components/header/Header';
 import './Login.css';
+
+// NESTE DESAFIO, POR QUESTÕES DE PRATICIDADE, OPTEI POR ARMAZENAR O TOKEN NO LOCALSTORAGE,
+// EMBORA SAIBA QUE NÃO É UMA MEDIDA SEGURA.
 
 const initialErrorState = {
   email: { valid: true, text: '' },
@@ -13,27 +17,26 @@ const initialErrorState = {
 };
 
 export default function Login() {
-  // const history = useHistory();
-
   const [state, setState] = useState({ email: '', password: '' });
   const { handleEmailValidation, handlePasswordValidation } = useValidation();
   const [error, setError] = useState(initialErrorState);
-
-  const [authError, setAuthError] = useState(false);
-  // const token = localStorage.getItem('token');
-
-  useEffect(() => {
-
-  }, []);
+  const [badReq, setBadReq] = useState('');
 
   const handleValueInput = (e) => {
-    setAuthError(false);
     const { name } = e.target;
     setState({ ...state, [name]: e.target.value });
   };
 
   const hendleSubmit = async (e) => {
     e.preventDefault();
+    const { email, password } = state;
+    try {
+      const res = await login({ email, password });
+      localStorage.setItem('token', res.data.token);
+      setBadReq('');
+    } catch (err) {
+      setBadReq(err);
+    }
   };
 
   return (
@@ -74,7 +77,7 @@ export default function Login() {
           </div>
           <div className="login__btn">
             <button
-              disabled={!error.email.valid || state.password.length < 8}
+              disabled={!error.email.valid || state.password.length < 6}
               type="submit"
             >
               Entrar
@@ -84,6 +87,9 @@ export default function Login() {
             <Link to="/signup" className="signup__link">Criar conta</Link>
           </div>
         </form>
+        <p className={badReq ? 'input__error' : 'input__error__hidden'}>
+          <span>Email ou senha inválidos.</span>
+        </p>
       </LoginForm>
     </div>
   );

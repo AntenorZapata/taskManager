@@ -10,11 +10,11 @@ export default function useValidation() {
   };
 
   const handlePasswordValidation = ({ target: { value } }, error, setError) => {
-    if (value.length < 8) {
+    if (value.length < 6) {
       setError({
         ...error,
         password:
-        { valid: false, text: 'A senha deve ter pelo menos 8 caracteres' },
+        { valid: false, text: 'A senha deve ter pelo menos 6 caracteres' },
       });
     } else {
       setError({ ...error, password: { valid: true } });
