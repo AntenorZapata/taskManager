@@ -1,11 +1,12 @@
 const userModel = require('../../models');
 const {
   validateUser, checkIfUserExists, validateUserLogin, bcryptHelper,
-  validateEmail,
+  validateEmail, checkIfEmailExists,
 } = require('../validations/validations');
 const { generateResetToken } = require('../../utils/generateResetToken');
 
 const register = async ({ name, email, password }) => {
+  await checkIfEmailExists(email);
   await validateUser({ name, email, password });
   const hash = await bcryptHelper(password, 'hash');
   const user = await userModel.register({ name, email, password: hash });

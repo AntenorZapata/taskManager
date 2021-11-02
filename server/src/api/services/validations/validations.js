@@ -70,6 +70,11 @@ const bcryptHelper = async (pass, mod, userPass = null) => {
   return compare;
 };
 
+const checkIfEmailExists = async (email) => {
+  const user = await userModel.getByEmail(email);
+  if (user) throw new ApiError('User already exists', 'invalid_fields', 400);
+};
+
 module.exports = {
   validateTask,
   checkIfTaskExists,
@@ -77,5 +82,6 @@ module.exports = {
   checkIfUserExists,
   validateUserLogin,
   bcryptHelper,
+  checkIfEmailExists,
   validateEmail,
 };
