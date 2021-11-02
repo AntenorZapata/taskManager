@@ -4,7 +4,6 @@ import LoginForm from '../../components/LoginForm/LoginForm';
 import login from '../../api';
 
 import useValidation from '../../hooks/useValidation';
-// import Header from '../../components/header/Header';
 import './Login.css';
 
 // NESTE DESAFIO, POR QUESTÕES DE PRATICIDADE, OPTEI POR ARMAZENAR O TOKEN NO LOCALSTORAGE,
@@ -41,7 +40,6 @@ export default function Login() {
 
   return (
     <div>
-      {/* <Header /> */}
       <LoginForm>
         <form onSubmit={hendleSubmit}>
           <div className="input-box">
