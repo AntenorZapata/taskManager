@@ -12,4 +12,6 @@ router.route('/:id').get(verifyToken, taskController.getById)
   .delete(verifyToken, taskController.remove)
   .put(verifyToken, taskController.update);
 
+router.route('/status/:id').patch(verifyToken, taskController.updateStatus);
+
 module.exports = router;

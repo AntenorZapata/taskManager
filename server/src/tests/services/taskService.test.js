@@ -15,7 +15,6 @@ const FIRST_TASK = {
 
 const VALID_TASK = {
   task: 'task',
-  author: 'antenor@gmail.com',
   category: 'task_category',
 };
 
@@ -44,6 +43,8 @@ const INCORRECT_TASK = {
   author: 'antenor@gmail.com',
   category: 'Category_test',
 };
+
+const USER = { email: 'antenor@gmail.com' };
 
 describe('Get all tasks Service', () => {
   describe('When there is no task', async () => {
@@ -162,7 +163,7 @@ describe('Create a Task Service', () => {
     });
 
     it('should create a task', async () => {
-      const task = await taskService.create(VALID_TASK);
+      const task = await taskService.create(VALID_TASK, USER);
       expect(task).to.be.an('object');
       expect(task).haveOwnProperty('status');
       expect(task).haveOwnProperty('id');
@@ -170,38 +171,27 @@ describe('Create a Task Service', () => {
   });
 
   describe('When the fields are incorrect', () => {
-    it('should return an error of author', async () => {
+    it('should return an error of category', async () => {
       try {
-        await taskService.create(FIRST_TASK);
+        await taskService.create(INCORRECT_CATEGORY);
       } catch (err) {
         expect(err).to.be.an('error');
-        expect(err.message).to.be.eq('"author" must be a valid email');
+        expect(err.message).to.be.eq('"category" is not allowed to be empty');
         expect(err.code).to.be.eq('invalid_fields');
         expect(err.statusCode).to.be.eq(400);
       }
     });
-  });
 
-  it('should return an error of category', async () => {
-    try {
-      await taskService.create(INCORRECT_CATEGORY);
-    } catch (err) {
-      expect(err).to.be.an('error');
-      expect(err.message).to.be.eq('"category" is not allowed to be empty');
-      expect(err.code).to.be.eq('invalid_fields');
-      expect(err.statusCode).to.be.eq(400);
-    }
-  });
-
-  it('should return an error of task', async () => {
-    try {
-      await taskService.create(INCORRECT_TASK);
-    } catch (err) {
-      expect(err).to.be.an('error');
-      expect(err.message).to.be.eq('"task" is not allowed to be empty');
-      expect(err.code).to.be.eq('invalid_fields');
-      expect(err.statusCode).to.be.eq(400);
-    }
+    it('should return an error of task', async () => {
+      try {
+        await taskService.create(INCORRECT_TASK);
+      } catch (err) {
+        expect(err).to.be.an('error');
+        expect(err.message).to.be.eq('"task" is not allowed to be empty');
+        expect(err.code).to.be.eq('invalid_fields');
+        expect(err.statusCode).to.be.eq(400);
+      }
+    });
   });
 });
 

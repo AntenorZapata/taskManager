@@ -18,8 +18,9 @@ const getById = async (id) => {
   return task;
 };
 
-const remove = async (id) => {
-  await checkIfTaskExists(id);
+const remove = async (id, user) => {
+  const task = await checkIfTaskExists(id);
+  await validateOwnership(user.email, task.author);
   await taskModel.remove(id);
 };
 
@@ -31,10 +32,17 @@ const update = async (id, body, user) => {
   return newTask;
 };
 
+const updateStatus = async (id, newStatus) => {
+  await checkIfTaskExists(id);
+  const task = await taskModel.updateStatus(id, newStatus);
+  return task;
+};
+
 module.exports = {
   create,
   getById,
   getAll,
   remove,
   update,
+  updateStatus,
 };

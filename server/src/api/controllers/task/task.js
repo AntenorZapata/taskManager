@@ -17,7 +17,7 @@ const getById = catchAsync(async (req, res) => {
 });
 
 const remove = catchAsync(async (req, res) => {
-  await taskService.remove(req.params.id);
+  await taskService.remove(req.params.id, req.user);
   return res.status(204).json(null);
 });
 
@@ -27,10 +27,16 @@ const update = catchAsync(async (req, res) => {
   return res.status(200).json(task);
 });
 
+const updateStatus = catchAsync(async (req, res) => {
+  const task = await taskService.updateStatus(req.params.id, req.body.status);
+  return res.status(200).json(task);
+});
+
 module.exports = {
   create,
   getAll,
   getById,
   remove,
   update,
+  updateStatus,
 };
