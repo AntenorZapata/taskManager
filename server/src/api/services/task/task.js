@@ -32,10 +32,17 @@ const update = async (id, body, user) => {
   return newTask;
 };
 
+const updateStatus = async (id, newStatus) => {
+  await checkIfTaskExists(id);
+  const task = await taskModel.updateStatus(id, newStatus);
+  return task;
+};
+
 module.exports = {
   create,
   getById,
   getAll,
   remove,
   update,
+  updateStatus,
 };

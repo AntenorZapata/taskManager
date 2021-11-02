@@ -38,6 +38,11 @@ const remove = async (id) => {
     .then((db) => db.collection('tasks').findOneAndDelete({ _id: ObjectId(id) }));
 };
 
+// Update StatusCode
+const updateStatus = async (id, newStatus) => connection()
+  .then((db) => db.collection('tasks').updateOne({ _id: ObjectId(id) },
+    { $set: { status: newStatus || 'Em andamento' } }));
+
 // Update
 
 const update = async (id, { task, category }, user) => {
@@ -67,4 +72,5 @@ module.exports = {
   getById,
   remove,
   update,
+  updateStatus,
 };

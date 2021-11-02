@@ -1,5 +1,5 @@
 const {
-  create, getAll, getById, remove, update,
+  create, getAll, getById, remove, update, updateStatus,
 } = require('./task/task');
 
 const {
@@ -17,4 +17,5 @@ module.exports = {
   forgotPassword,
   resetPassword,
   updateUser,
+  updateStatus,
 };

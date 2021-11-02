@@ -27,10 +27,16 @@ const update = catchAsync(async (req, res) => {
   return res.status(200).json(task);
 });
 
+const updateStatus = catchAsync(async (req, res) => {
+  const task = await taskService.updateStatus(req.params.id, req.body.status);
+  return res.status(200).json(task);
+});
+
 module.exports = {
   create,
   getAll,
   getById,
   remove,
   update,
+  updateStatus,
 };
