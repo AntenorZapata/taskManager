@@ -36,14 +36,16 @@ const FIRST_TASK = {
 
 const SECOND_TASK = {
   task: 'Demitir instrutores :P (sorry)',
-  author: 'antenor@gmail.com',
+  user: { email: 'antenor@gmail.com' },
   category: 'Equipe',
 };
 
-const TASK_UPDATE = {
-  _id: FIRST_ID,
-  ...FIRST_TASK,
+const THIRD_TASK = {
+  task: 'Atualizar Curriculo',
+  category: 'curriculo',
 };
+
+const USER = { email: 'antenor@gmail.com' };
 
 describe('Get all tasks', () => {
   describe('When there is no task', async () => {
@@ -61,7 +63,7 @@ describe('Get all tasks', () => {
   describe('when there is at least one task', async () => {
     before(async () => {
       await connectionMock.db('TaskManager').collection('tasks')
-        .insertOne(FIRST_TASK);
+        .insertOne(FIRST_TASK, FIRST_TASK.user);
     });
 
     after(async () => {
@@ -85,7 +87,7 @@ describe('Get all tasks', () => {
 
     it("should return an array of objects with the properties 'author', 'task', 'category'", async () => {
       const [task] = await taskModel.getAll();
-      expect(task).to.include.all.keys('author', 'task', 'category');
+      expect(task).to.include.all.keys('task', 'author', 'category');
     });
   });
 
@@ -172,20 +174,20 @@ describe('Create a Task', () => {
   });
 
   it('should return an array with length of 1', async () => {
-    await taskModel.create(FIRST_TASK);
+    await taskModel.create(THIRD_TASK, USER);
     const task = await taskModel.getAll();
     expect(task.length).to.be.eq(1);
   });
 
   it('should return an object with the properties "status" and "id"', async () => {
-    const taskReturn = await taskModel.create(FIRST_TASK);
+    const taskReturn = await taskModel.create(THIRD_TASK, USER);
     expect(taskReturn).to.be.an('object');
     expect(taskReturn.status).to.be.eq('success');
     expect(taskReturn).has.property('id');
   });
 
   it('should add one Task', async () => {
-    await taskModel.create(FIRST_TASK);
+    await taskModel.create(THIRD_TASK, USER);
     const [task] = await taskModel.getAll();
     expect(task).to.be.an('object');
   });
@@ -212,28 +214,24 @@ describe('Remove a task', () => {
 });
 
 describe('Update a task', () => {
-  before(async () => {
+  beforeEach(async () => {
     await connectionMock.db('TaskManager').collection('tasks')
-      .insertOne(TASK_UPDATE);
+      .insertOne({ _id: '60e770a1f02f7e8cab42588a', ...FIRST_TASK });
   });
 
-  after(async () => {
+  afterEach(async () => {
     await connectionMock.db('TaskManager').collection('tasks').deleteMany();
   });
 
-  it('should return null when id does not exist', async () => {
-    const updateTask = await taskModel.update('617ea58cac74b34c09530650', SECOND_TASK);
-    expect(updateTask).to.be.null;
-  });
-
   it('should return an object with new values', async () => {
-    const currTask = await taskModel.getById(FIRST_ID);
+    const [currTask] = await taskModel.getAll();
     expect(currTask.category).to.be.eq(FIRST_TASK.category);
     expect(currTask.task).to.be.eq(FIRST_TASK.task);
+    const newTask = await taskModel.update('60e770a1f02f7e8cab42588a',
+      { task: 'new_task', category: 'new_category' }, { email: 'antenor@gmail.com' });
 
-    const newTask = await taskModel.update(FIRST_ID, SECOND_TASK);
     expect(newTask).to.be.an('object');
-    expect(newTask.category).to.be.eq(SECOND_TASK.category);
-    expect(newTask.task).to.be.eq(SECOND_TASK.task);
+    expect(newTask.category).to.be.eq('new_category');
+    expect(newTask.task).to.be.eq('new_task');
   });
 });

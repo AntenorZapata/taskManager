@@ -18,8 +18,9 @@ const getById = async (id) => {
   return task;
 };
 
-const remove = async (id) => {
-  await checkIfTaskExists(id);
+const remove = async (id, user) => {
+  const task = await checkIfTaskExists(id);
+  await validateOwnership(user.email, task.author);
   await taskModel.remove(id);
 };
 

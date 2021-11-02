@@ -17,7 +17,7 @@ const getById = catchAsync(async (req, res) => {
 });
 
 const remove = catchAsync(async (req, res) => {
-  await taskService.remove(req.params.id);
+  await taskService.remove(req.params.id, req.user);
   return res.status(204).json(null);
 });
 

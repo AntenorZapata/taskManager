@@ -41,11 +41,23 @@ const remove = async (id) => {
 // Update
 
 const update = async (id, { task, category }, user) => {
+  const updateAt = Date();
+  const status = 'Em andamento';
   await connection().then((db) => db
     .collection('tasks').updateOne({ _id: ObjectId(id) },
-      { $set: { author: user.email, task, category } }));
-  const updateTask = await getById(id);
-  return updateTask;
+      {
+        $set: {
+          author: user.email, task, category, status, updateAt,
+        },
+      }));
+  return {
+    _id: id,
+    task,
+    category,
+    author: user.email,
+    status,
+    updateAt,
+  };
 };
 
 module.exports = {
