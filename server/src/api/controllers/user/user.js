@@ -47,10 +47,16 @@ const resetPassword = catchAsync(async (req, res, next) => {
   return res.status(200).json({ status: 'success', message: 'password updated' });
 });
 
+const updateUser = catchAsync(async (req, res, next) => {
+  const user = await userService.updateUser(req.body, req.user);
+  return res.status(200).json(user);
+});
+
 module.exports = {
   register,
   login,
   forgotPassword,
   resetPassword,
+  updateUser,
 
 };

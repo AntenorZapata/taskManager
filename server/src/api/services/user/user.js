@@ -41,9 +41,22 @@ const reset = async (token, password) => {
   await userModel.updateUser(newUser);
 };
 
+const updateUser = async (body, user) => {
+  const {
+    password, name, email, newPassword,
+  } = body;
+  await bcryptHelper(password, 'compare', user.password);
+  const hash = await bcryptHelper(newPassword, 'hash');
+  const newUser = await userModel.updateUser({
+    ...user, name, email, password: hash,
+  });
+  return newUser;
+};
+
 module.exports = {
   register,
   login,
   reset,
   forgotPassword,
+  updateUser,
 };

@@ -3,7 +3,7 @@ const {
 } = require('./task/task');
 
 const {
-  register, login, forgotPassword, resetPassword,
+  register, login, forgotPassword, resetPassword, updateUser,
 } = require('./user/user');
 
 module.exports = {
@@ -16,4 +16,5 @@ module.exports = {
   login,
   forgotPassword,
   resetPassword,
+  updateUser,
 };

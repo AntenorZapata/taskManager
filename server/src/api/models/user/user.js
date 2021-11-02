@@ -15,7 +15,7 @@ const getByEmail = async (email) => connection().then((db) => db
   .collection('user').findOne({ email }));
 
 const updateUser = async (user) => connection().then((db) => db.collection('user')
-  .updateOne({ email: user.email }, { $set: user }));
+  .updateOne({ _id: user._id }, { $set: user }));
 
 const findByHash = async (token) => connection().then((db) => db
   .collection('user').findOne({ passwordResetToken: token }));
