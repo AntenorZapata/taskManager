@@ -39,9 +39,16 @@ const remove = async (id) => {
 };
 
 // Update StatusCode
-const updateStatus = async (id, newStatus) => connection()
-  .then((db) => db.collection('tasks').updateOne({ _id: ObjectId(id) },
-    { $set: { status: newStatus || 'Em andamento' } }));
+
+const updateStatus = async (id, newStatus) => {
+  await connection()
+    .then((db) => db.collection('tasks').updateOne({ _id: ObjectId(id) },
+      { $set: { status: newStatus || 'Em andamento' } }));
+  return {
+    _id: id,
+    status: newStatus,
+  };
+};
 
 // Update
 

@@ -235,3 +235,22 @@ describe('Update a task', () => {
     expect(newTask.task).to.be.eq('new_task');
   });
 });
+
+describe('Update a task status', () => {
+  beforeEach(async () => {
+    await connectionMock.db('TaskManager').collection('tasks')
+      .insertOne({ _id: '60e770a1f02f7e8cab42588a', status: 'Em andamento', ...FIRST_TASK });
+  });
+
+  afterEach(async () => {
+    await connectionMock.db('TaskManager').collection('tasks').deleteMany();
+  });
+
+  it('should return an object with new status', async () => {
+    const [currTask] = await taskModel.getAll();
+    expect(currTask.status).to.be.eq('Em andamento');
+    const newStatus = await taskModel.updateStatus('60e770a1f02f7e8cab42588a', 'pausado');
+    expect(newStatus).to.be.an('object');
+    expect(newStatus.status).to.be.eq('pausado');
+  });
+});
