@@ -1,0 +1,79 @@
+@import url('https://fonts.googleapis.com/css2?family=Grechen+Fuemen&display=swap');
+
+.navBarItems {
+  background: linear-gradient(
+    90deg,
+    rgba(110, 94, 254, 0.671),
+    rgba(73, 63, 252, 1)
+  );
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.2rem;
+}
+
+.icons-nav {
+  font-size: 2.5rem;
+  color: #eee;
+}
+
+.navbar-logo {
+  color: #fff;
+  justify-self: start;
+  margin-left: 20px;
+  cursor: pointer;
+  font-size: 3rem;
+  font-family: 'Grechen Fuemen', cursive;
+}
+
+.fa-guitar {
+  margin-left: 0.5rem;
+  font-size: 1.6rem;
+}
+
+.nav-menu {
+  display: grid;
+  grid-template-columns: repeat(5, auto);
+  list-style: none;
+  text-align: center;
+  width: 70vw;
+  justify-content: end;
+  margin-right: 2rem;
+}
+
+.nav-links {
+  color: white;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  font-size: 1.5rem;
+}
+
+.nav-links:hover {
+  background-color: #6d76f7;
+  border-radius: 4px;
+  transition: all 0.2s ease-out;
+}
+
+.fa-bars {
+  color: white;
+}
+
+.nav-links-mobile {
+  display: none;
+}
+
+.menu-icon {
+  display: none;
+}
+
+.links-off {
+  display: none;
+  padding: 0.5rem 1rem;
+}
+
+.home-title {
+  color: white;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+}

@@ -5,6 +5,7 @@ import login from '../../api';
 
 import useValidation from '../../hooks/useValidation';
 import './Login.css';
+import Header from '../../components/Header/Header';
 
 // NESTE DESAFIO, POR QUESTÕES DE PRATICIDADE, OPTEI POR ARMAZENAR O TOKEN NO LOCALSTORAGE,
 // EMBORA SAIBA QUE NÃO É UMA MEDIDA SEGURA.
@@ -33,7 +34,6 @@ export default function Login() {
     try {
       const res = await login({ email, password });
       localStorage.setItem('token', res.data.token);
-      setBadReq('');
       history.push('/');
     } catch (err) {
       setBadReq(err);
@@ -42,6 +42,7 @@ export default function Login() {
 
   return (
     <div>
+      <Header />
       <LoginForm>
         <form onSubmit={hendleSubmit}>
           <div className="input-box">
