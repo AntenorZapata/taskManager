@@ -16,6 +16,7 @@ const initialErrorState = {
 };
 
 export default function Login() {
+  const history = useHistory();
   const [state, setState] = useState({ email: '', password: '' });
   const { handleEmailValidation, handlePasswordValidation } = useValidation();
   const [error, setError] = useState(initialErrorState);
@@ -33,6 +34,7 @@ export default function Login() {
       const res = await login({ email, password });
       localStorage.setItem('token', res.data.token);
       setBadReq('');
+      history.push('/');
     } catch (err) {
       setBadReq(err);
     }
