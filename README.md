@@ -25,6 +25,10 @@ Node - Express - MongoDB - Nodemailer - Bcrypt - Crypto - Mocha/Chai/Sinon
     
     Rodar os testes
     $ npm test
+    
+### Testes
+    Na pasta server
+    $ npm test
    
 ### Rotas
 
