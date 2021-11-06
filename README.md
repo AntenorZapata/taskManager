@@ -23,8 +23,6 @@ Node - Express - MongoDB - Nodemailer - Bcrypt - Crypto - Mocha/Chai/Sinon
     Inicie o servidor
     $ npm run debug
     
-    Rodar os testes
-    $ npm test
 
 ### As variáveis de ambiente receberão os seguintes valores
        
